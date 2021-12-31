@@ -1,0 +1,66 @@
+<h1>詳細</h1>
+<%= link_to "一覧に戻る", instagrams_path %>
+
+<%= @image.user.email %>
+<%= image_tag @image.image1_url, class:"la" if @image.image1? %>
+<%= image_tag @image.image2_url, class:"la" if @image.image2? %>
+<%= image_tag @image.image3_url, class:"la" if @image.image3? %>
+<%= image_tag @image.image4_url, class:"la" if @image.image4? %>
+<p><%= @image.comment %></p>
+
+<div class="comment-wrapper">
+  <p>コメント一覧</p>
+  <% @comments.each do |c| %>
+    <div>
+      <%= c.user.email unless c.user.blank? %>
+      <br>
+      <%= c.content %>
+    </div>
+    <% if user_signed_in? %>
+        <% if current_user.already_comment_liked?(c) %>
+            <%= link_to instagram_comment_comment_like_path(@image,c), method: :delete do %>
+                <i class="fas fa-heart"></i><%= c.comment_likes.count %>
+            <% end %>
+        <% else %>
+            <%= link_to instagram_comment_comment_likes_path(@image,c), method: :post do %>
+                <i class="far fa-heart"></i><%= c.comment_likes.count %>
+            <% end %>
+        <% end %>
+    <% else %>
+        
+        <i class="far fa-heart"></i><%= c.comment_likes.count %>
+        
+    <% end %>
+
+    <%= button_to "削除する", instagram_comment_path(@image, c), method: :delete %>
+      <br>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <%= form_with(model: [@image, @comment], local: true) do |f| %>
+      <%= f.text_area :content %>
+      <%= button_tag type: "submit" do %>
+        <i class="far fa-comments"></i> コメントする
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<% if user_signed_in? %>
+    <% if current_user.already_liked?(@image) %>
+        <%= link_to instagram_like_path(@image), method: :delete do %>
+            <i class="fas fa-heart"></i><%= @image.likes.count %>
+        <% end %>
+    <% else %>
+        <%= link_to instagram_likes_path(@image), method: :post do %>
+            <i class="far fa-heart"></i><%= @image.likes.count %>
+        <% end %>
+    <% end %>
+<% else %>
+    <i class="far fa-heart"></i><%= @image.likes.count %>
+<% end %>
+
+<h2>いいねしたユーザー</h2>
+<% @image.liked_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
