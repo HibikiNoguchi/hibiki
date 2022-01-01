@@ -8,6 +8,7 @@ class InstagramsController < ApplicationController
         else
             @images = Instagram.all
         end
+        @comment = Comment.new
     end
 
     def new

@@ -41,4 +41,12 @@
         <%= link_to "編集する", edit_instagram_path(t.id) ,class:"btn btn-outline-primary"%>
         <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"btn btn-outline-danger"%>
     <% end %>
+    <% if user_signed_in? %>
+        <%= form_with(model: [t, @comment], local: true) do |f| %>
+            <%= f.text_area :content %>
+            <%= button_tag type: "submit" do %>
+                <i class="far fa-comments"></i> コメントする
+            <% end %>
+        <% end %>
+    <% end %>
 <% end %>
