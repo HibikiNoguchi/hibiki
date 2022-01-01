@@ -4,6 +4,12 @@
 <%= link_to "マイページへ", user_path(current_user.id) %>
 <% end %>
 
+<h3>投稿を検索</h3>
+ <%= form_tag({controller:"instagrams",action:"index"}, method: :get) do %>
+   <%= text_field_tag :search %>
+   <%= submit_tag '検索する'  %>
+<% end %>
+
 <% @images.each do |t| %>
 
     <a href="/users/<%= t.user.id %>"><%= t.user.name %></a>

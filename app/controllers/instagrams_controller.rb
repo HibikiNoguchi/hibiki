@@ -2,7 +2,12 @@ class InstagramsController < ApplicationController
 
     before_action :authenticate_user!
     def index
-        @images = Instagram.all
+        if params[:search] != nil && params[:search] != ''
+            search = params[:search]
+            @images = Instagram.joins(:user).where("comment LIKE ? OR name LIKE ?", "%#{search}%", "%#{search}%")
+        else
+            @images = Instagram.all
+        end
     end
 
     def new
