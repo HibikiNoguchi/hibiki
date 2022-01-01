@@ -35,9 +35,9 @@
         <i class="far fa-heart"></i><%= t.likes.count %>
     <% end %>
   
+    <%= link_to "詳細へ", instagram_path(t.id) %>
     <% if user_signed_in? && current_user.id == t.user_id %>
 
-        <%= link_to "詳細へ", instagram_path(t.id) %>
         <%= link_to "編集する", edit_instagram_path(t.id) ,class:"btn btn-outline-primary"%>
         <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"btn btn-outline-danger"%>
     <% end %>
