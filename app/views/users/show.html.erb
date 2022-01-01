@@ -1,6 +1,8 @@
 <h1>users#show</h1>
 
 <%= image_tag @user.image_url, size: "200x200" ,class: "rounded-circle" if @user.image? %>
+
+<%= render partial: 'relationships/follow_button' %>
 <p>名前 : <%= @user.name %></p>
 <p>メールアドレス : <%= @user.email %></p>
 <p>プロフィール : <%= @user.profile %></p>
@@ -19,6 +21,20 @@
 <% @user.liked_instagrams.each do |t| %>
   <%= t.user.name %>
   <%= t.comment %>
+<% end %>
+
+<h2>フォロワー</h2>
+<% @user.followings.each do |following| %>
+  <%= link_to user_path(following.id) do %>
+      <%= following.name %>
+  <% end %>
+<% end %>
+
+<h2>フォロー</h2>
+<% @user.followers.each do |follower| %>
+  <%= link_to user_path(follower.id) do %>
+      <%= follower.name %>
+  <% end %>
 <% end %>
 
 <%= link_to "Tweet一覧に戻る", instagrams_path %>
