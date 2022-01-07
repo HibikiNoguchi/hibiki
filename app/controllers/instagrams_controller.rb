@@ -54,6 +54,6 @@ class InstagramsController < ApplicationController
     private
 
     def instagram_params
-        params.require(:instagram).permit(:comment, :image1, :image2, :image3, :image4) 
+        params.require(:instagram).permit(:comment, :image1 ) 
     end
 end

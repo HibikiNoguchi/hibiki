@@ -12,41 +12,54 @@
 
 <% @images.each do |t| %>
 
-    <a href="/users/<%= t.user.id %>"><%= t.user.name %></a>
-    <%= t.user.email %>
-    <%= image_tag t.image1_url, class:"la" if t.image1? %>
-    <%= image_tag t.image2_url, class:"la" if t.image2? %>
-    <%= image_tag t.image3_url, class:"la" if t.image3? %>
-    <%= image_tag t.image4_url, class:"la" if t.image4? %>
+    <div class="card mt-3" style="width: 36rem;" >
+        <div class="card-header">
+            <a href="/users/<%= t.user.id %>" class="d-flex flex-row">
+                <p class="icon">
+                    <%= image_tag t.user.image_url, size: "40x40", class:"rounded-circle" if t.user.image? %>
+                </p>
+                <p class="h4 ml-3">
+                    <%= t.user.name %>
+                </p>
+            </a>
+        </div>
+        
+        <div class="card-body p-0">
+            <%= image_tag t.image1_url, class:"card-img-top" if t.image1? %>
+        </div>
 
-    <p><%= t.comment %></p>
+        <div class="class-footer">
+            <%= t.user.email %>
+            <p><%= t.comment %></p>
 
-    <% if user_signed_in? %>
-        <% if current_user.already_liked?(t) %>
-            <%= link_to instagram_like_path(id: t.id, instagram_id: t.id), method: :delete do %>
-                <i class="fas fa-heart"></i><%= t.likes.count %>>
-            <% end %>
-        <% else %>
-            <%= link_to instagram_likes_path(id: t.id, instagram_id: t.id), method: :post do %>
+            <% if user_signed_in? %>
+                <% if current_user.already_liked?(t) %>
+                    <%= link_to instagram_like_path(id: t.id, instagram_id: t.id), method: :delete do %>
+                        <i class="fas fa-heart"></i><%= t.likes.count %>>
+                    <% end %>
+                <% else %>
+                    <%= link_to instagram_likes_path(id: t.id, instagram_id: t.id), method: :post do %>
+                        <i class="far fa-heart"></i><%= t.likes.count %>
+                    <% end %>
+                <% end %>
+            <% else %>
                 <i class="far fa-heart"></i><%= t.likes.count %>
             <% end %>
-        <% end %>
-    <% else %>
-        <i class="far fa-heart"></i><%= t.likes.count %>
-    <% end %>
-  
-    <%= link_to "詳細へ", instagram_path(t.id) %>
-    <% if user_signed_in? && current_user.id == t.user_id %>
+        
+            <%= link_to "詳細へ", instagram_path(t.id) %>
+            <% if user_signed_in? && current_user.id == t.user_id %>
 
-        <%= link_to "編集する", edit_instagram_path(t.id) ,class:"btn btn-outline-primary"%>
-        <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"btn btn-outline-danger"%>
-    <% end %>
-    <% if user_signed_in? %>
-        <%= form_with(model: [t, @comment], local: true) do |f| %>
-            <%= f.text_area :content %>
-            <%= button_tag type: "submit" do %>
-                <i class="far fa-comments"></i> コメントする
+                <%= link_to "編集する", edit_instagram_path(t.id) ,class:"btn btn-outline-primary"%>
+                <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"btn btn-outline-danger"%>
             <% end %>
-        <% end %>
-    <% end %>
+            <% if user_signed_in? %>
+                <%= form_with(model: [t, @comment], local: true) do |f| %>
+                    <%= f.text_area :content %>
+                    <%= button_tag type: "submit" do %>
+                        <i class="far fa-comments"></i> コメントする
+                    <% end %>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
 <% end %>
