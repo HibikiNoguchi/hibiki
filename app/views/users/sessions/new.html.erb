@@ -1,26 +1,31 @@
-<h2>Log in</h2>
+<%= stylesheet_link_tag 'signup', :media => "all" %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<div class="container">
+  <h4 class="text-center mb-3 mt-3">Geekinstagramにログイン</h4>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="box1 bg-light  mb-3 p-0">
+      <%= f.label :email, "Eメール" ,{class: 'small m-0 font-weight-bold'} %><br />
+      <%= f.email_field :email, class: "box2 bg-light", autofocus: true, autocomplete: "email" %>
+    </div>
+  
+    <div class="box1 bg-light mb-3 p-0 ">
+      <%= f.label :password, "パスワード" ,{class: 'small m-0 font-weight-bold'}  %><br />
+      <%= f.password_field :password, class: "box2 bg-light", autocomplete: "off" %>
+    </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+    <% if devise_mapping.rememberable? -%>
+      <div class="field">
+        <%= f.check_box :remember_me %>
+        私を覚える
+      </div>
+    <% end -%>
+
+    <div class="box-login mt-3 mb-3">
+      <%= f.submit "Log in", :class=>"rounded-pill" %>
     </div>
   <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
+  <div class="row">
+    <%= render "users/shared/links" %>
   </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>
