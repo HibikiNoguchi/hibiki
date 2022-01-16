@@ -18,11 +18,6 @@ class User < ApplicationRecord
     self.likes.exists?(instagram_id: instagram.id)
   end
 
-  has_many :comment_likes, dependent: :destroy
-  has_many :comment_liked_comments, through: :likes, source: :comment
-  def already_comment_liked?(comment)
-    self.comment_likes.exists?(comment_id: comment.id)
-  end
 
   has_many :relationships
   has_many :followings, through: :relationships, source: :follow

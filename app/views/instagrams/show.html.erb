@@ -3,9 +3,7 @@
 
 <%= @image.user.email %>
 <%= image_tag @image.image1_url, class:"la" if @image.image1? %>
-<%= image_tag @image.image2_url, class:"la" if @image.image2? %>
-<%= image_tag @image.image3_url, class:"la" if @image.image3? %>
-<%= image_tag @image.image4_url, class:"la" if @image.image4? %>
+
 <p><%= @image.comment %></p>
 
 <div class="comment-wrapper">
@@ -16,21 +14,7 @@
       <br>
       <%= c.content %>
     </div>
-    <% if user_signed_in? %>
-        <% if current_user.already_comment_liked?(c) %>
-            <%= link_to instagram_comment_comment_like_path(@image,c), method: :delete do %>
-                <i class="fas fa-heart"></i><%= c.comment_likes.count %>
-            <% end %>
-        <% else %>
-            <%= link_to instagram_comment_comment_likes_path(@image,c), method: :post do %>
-                <i class="far fa-heart"></i><%= c.comment_likes.count %>
-            <% end %>
-        <% end %>
-    <% else %>
-        
-        <i class="far fa-heart"></i><%= c.comment_likes.count %>
-        
-    <% end %>
+    
 
     <%= button_to "削除する", instagram_comment_path(@image, c), method: :delete %>
       <br>
