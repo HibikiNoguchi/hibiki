@@ -6,7 +6,6 @@ Rails.application.routes.draw do
   resources :instagrams do
     resources :likes, only: [:create, :destroy]
     resources :comments, only: [:create, :destroy] do
-      resources :comment_likes, only: [:create, :destroy]
     end
   end
   

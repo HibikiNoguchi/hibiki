@@ -1,65 +1,68 @@
-<h1><%= link_to "投稿", new_instagram_path %></h1>
-<%= button_to 'ログアウト', destroy_user_session_path, method: :delete %>
-<% if user_signed_in? %>
-<%= link_to "マイページへ", user_path(current_user.id) %>
-<% end %>
 
-<h3>投稿を検索</h3>
- <%= form_tag({controller:"instagrams",action:"index"}, method: :get) do %>
-   <%= text_field_tag :search %>
-   <%= submit_tag '検索する'  %>
-<% end %>
 
-<% @images.each do |t| %>
+<div class="container">
+    <% @images.each do |t| %>
 
-    <div class="card mt-3" style="width: 36rem;" >
-        <div class="card-header">
-            <a href="/users/<%= t.user.id %>" class="d-flex flex-row">
-                <p class="icon">
-                    <%= image_tag t.user.image_url, size: "40x40", class:"rounded-circle" if t.user.image? %>
-                </p>
-                <p class="h4 ml-3">
-                    <%= t.user.name %>
-                </p>
-            </a>
-        </div>
-        
-        <div class="card-body p-0">
-            <%= image_tag t.image1_url, class:"card-img-top" if t.image1? %>
-        </div>
+        <div class="card m-3 card-size" >
+            <div class="card-header bg-white d-flex flex-row">
+                <div class="mr-auto">
+                    <a href="/users/<%= t.user.id %>" class="d-flex flex-row">
+                        <p class="icon">
+                            <%= image_tag t.user.image_url, size: "40x40", class:"rounded-circle" if t.user.image? %>
+                        </p>
+                        <p class="h4 ml-3">
+                            <%= t.user.name %>
+                        </p>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ･･･
+                    </a>
 
-        <div class="class-footer">
-            <%= t.user.email %>
-            <p><%= t.comment %></p>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <%= link_to "詳細へ", instagram_path(t.id) ,class:"dropdown-item" %>
+                        <% if user_signed_in? && current_user.id == t.user_id %>
+                            <%= link_to "編集する", edit_instagram_path(t.id) ,class:"dropdown-item"%>
+                            <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"dropdown-item"%>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <%= image_tag t.image1_url, class:"card-img-top" if t.image1? %>
+            </div>
 
-            <% if user_signed_in? %>
-                <% if current_user.already_liked?(t) %>
-                    <%= link_to instagram_like_path(id: t.id, instagram_id: t.id), method: :delete do %>
-                        <i class="fas fa-heart"></i><%= t.likes.count %>>
+            <div class="class-footer">
+                <p><%= t.comment %></p>
+
+                <% if user_signed_in? %>
+                    <% if current_user.already_liked?(t) %>
+                        <%= link_to instagram_like_path(id: t.id, instagram_id: t.id), method: :delete do %>
+                            <i class="fas fa-heart"></i>
+                        <% end %>
+                    <% else %>
+                        <%= link_to instagram_likes_path(id: t.id, instagram_id: t.id), method: :post do %>
+                            <i class="far fa-heart"></i>
+                        <% end %>
                     <% end %>
                 <% else %>
-                    <%= link_to instagram_likes_path(id: t.id, instagram_id: t.id), method: :post do %>
-                        <i class="far fa-heart"></i><%= t.likes.count %>
-                    <% end %>
+                    <i class="far fa-heart"></i>
                 <% end %>
-            <% else %>
-                <i class="far fa-heart"></i><%= t.likes.count %>
-            <% end %>
-        
-            <%= link_to "詳細へ", instagram_path(t.id) %>
-            <% if user_signed_in? && current_user.id == t.user_id %>
+                <i class="m-1"><small class="text-muted">いいね! <%= t.likes.count %>件</small></i>
 
-                <%= link_to "編集する", edit_instagram_path(t.id) ,class:"btn btn-outline-primary"%>
-                <%= link_to "削除する", instagram_path(t.id), method: :delete ,class:"btn btn-outline-danger"%>
-            <% end %>
-            <% if user_signed_in? %>
-                <%= form_with(model: [t, @comment], local: true) do |f| %>
-                    <%= f.text_area :content %>
-                    <%= button_tag type: "submit" do %>
-                        <i class="far fa-comments"></i> コメントする
+                <div class="row border-bottom m-1"></div>
+            
+                <% if user_signed_in? %>
+                    <%= form_with(model: [t, @comment], local: true) do |f| %>
+                        <%= f.text_area :content , class: "border-0 f-size" , :placeholder => "コメントを入力"%>
+                        <%= button_tag type: "submit" do %>
+                            <i class="far fa-comments"></i> コメントする
+                        <% end %>
                     <% end %>
                 <% end %>
-            <% end %>
+            </div>
         </div>
-    </div>
-<% end %>
+    <% end %>
+</div>

@@ -1,50 +1,115 @@
-<h1>詳細</h1>
-<%= link_to "一覧に戻る", instagrams_path %>
 
-<%= @image.user.email %>
-<%= image_tag @image.image1_url, class:"la" if @image.image1? %>
-
-<p><%= @image.comment %></p>
-
-<div class="comment-wrapper">
-  <p>コメント一覧</p>
-  <% @comments.each do |c| %>
-    <div>
-      <%= c.user.email unless c.user.blank? %>
-      <br>
-      <%= c.content %>
-    </div>
-    
-
-    <%= button_to "削除する", instagram_comment_path(@image, c), method: :delete %>
-      <br>
-  <% end %>
-
-  <% if user_signed_in? %>
-    <%= form_with(model: [@image, @comment], local: true) do |f| %>
-      <%= f.text_area :content %>
-      <%= button_tag type: "submit" do %>
-        <i class="far fa-comments"></i> コメントする
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
-
-<% if user_signed_in? %>
-    <% if current_user.already_liked?(@image) %>
-        <%= link_to instagram_like_path(@image), method: :delete do %>
-            <i class="fas fa-heart"></i><%= @image.likes.count %>
-        <% end %>
-    <% else %>
-        <%= link_to instagram_likes_path(@image), method: :post do %>
-            <i class="far fa-heart"></i><%= @image.likes.count %>
-        <% end %>
-    <% end %>
-<% else %>
-    <i class="far fa-heart"></i><%= @image.likes.count %>
-<% end %>
 
 <h2>いいねしたユーザー</h2>
 <% @image.liked_users.each do |user| %>
   <li><%= user.email %></li>
 <% end %>
+
+<div class="container">
+  <div class="card card-size m-3 p-0 m-1">
+    <div class="row no-gutters">
+      <div class="col-md-5">
+        <%= image_tag @image.image1_url, class:"card-img" if @image.image1? %>
+      </div>
+      <div class="col-md-7">
+  
+          <div class="card-body pr-0">
+            <h5 class="card-title">
+              <a href="/users/<%= @image.user.id %>" class="d-flex flex-row">
+                <p class="icon">
+                    <%= image_tag @image.user.image_url, size: "40x40", class:"rounded-circle" if @image.user.image? %>
+                </p>
+                <p class="h4 ml-3">
+                    <%= @image.user.name %>
+                </p>
+              </a>
+            </h5>
+            <div class="row border-bottom m-1"></div>
+            <p class="card-text"><%= @image.comment %></p>
+            
+              <p class="card-text"><small class="text-muted">
+              <div class="overflow-auto comment-box">
+                <% @comments.each do |c| %>
+                  <div>
+                    <a href="/users/<%= c.user.id %>" class="d-flex flex-row p-0">
+                      <p class="icon m-1">
+                          <%= image_tag c.user.image_url, size: "20x20", class:"rounded-circle" if c.user.image? %>
+                      </p>
+                      <p class="m-1 ">
+                          <%= c.user.name %>
+                      </p>
+                    </a>
+
+                    <p class="ml-2 mb-0">
+                      <%= c.content %>
+                    
+                  
+                  
+                
+                      <% if user_signed_in? && current_user.id == c.user_id %>
+                        <%= link_to instagram_comment_path(@image, c), method: :delete do %>
+                          <i class="fas fa-trash-alt"></i>
+                        <% end %>
+                      <% end %>
+                    </p>
+                  </div>
+                  
+                    <br>
+                <% end %>
+              </div>
+
+                <% if user_signed_in? %>
+                    <% if current_user.already_liked?(@image) %>
+                        <%= link_to instagram_like_path(@image), method: :delete do %>
+                            <i class="fas fa-heart"></i>
+                        <% end %>
+                    <% else %>
+                        <%= link_to instagram_likes_path(@image), method: :post do %>
+                            <i class="far fa-heart"></i>
+                        <% end %>
+                    <% end %>
+                <% else %>
+                    <i class="far fa-heart"></i>
+                <% end %>
+                <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
+                  <i class="m-1">いいね! <%= @image.likes.count %>件</i>
+                </button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">いいねしたユーザー</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <% @image.liked_users.each do |user| %>
+                          <li><a href="/users/<%= user.id %>"><%= user.name %></a></li>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row border-bottom m-1"></div>
+              
+                <div>
+                  <% if user_signed_in? %>
+                    <%= form_with(model: [@image, @comment], local: true) do |f| %>
+                      <%= f.text_area :content, class: "border-0 f-size" , :placeholder => "コメントを入力" %>
+                      <%= button_tag type: "submit" do %>
+                        <i class="far fa-comments"></i> コメントする
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </p>
+          
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= link_to "一覧に戻る", instagrams_path %>

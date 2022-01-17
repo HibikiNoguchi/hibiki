@@ -1,16 +1,18 @@
 <%= form_for @image do |f| %>
-    <div class="field">
-        <h4><%= f.label :画像 %></h4>
-        <%= f.file_field :image1 %>
-    </div>
+    <div class="container">
+        <div class="field">
+            <h4><%= f.label :画像 %></h4>
+            <%= f.file_field :image1 %>
+        </div>
 
+        
+        <div class="t-field">
+            <h4><%= f.label :コメント %></h4>
+            <%= f.text_area :comment, class:"f-size" %>
+        </div>
     
-    <div class="field">
-        <h4><%= f.label :コメント %></h4>
-        <%= f.text_area :comment, size: "100x10"  %>
-    </div>
-    
-    <div class="field">
-        <%= f.submit "投稿する" %>
+        <div class="field">
+            <%= f.submit "投稿する" %>
+        </div>
     </div>
 <% end %>
